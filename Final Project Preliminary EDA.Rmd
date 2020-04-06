@@ -34,7 +34,3 @@ Explore intuition related to the research question
 Create some informative plots and summary statistics 
 Describe preliminary observations and intuition about the research question
 
-TWO Data Sources (at least)
-Primary data:  This is the main data source to be used in your investigation and it MUST NOT be loaded directly from an R package (but API's are fine for example). You should have many cases (e.g., at least hundreds--preferably many thousands), many variables including a mixture of both categorical & quantitative variables.  
-Other data sources: No problem for these to come from an R package--for example, the ZipGeography or ZipDemography data (from DataComputing package) might be useful when joined with primary sources as you investigate some phenomenon in the US. 
-Note: Each data source should be less than 80-100MB--the maximum file size permitted in a GitHub Repo... use sampling to create a reduced version for the purpose of the project if needed as we've done occasionally in exercises and weekly activities.
