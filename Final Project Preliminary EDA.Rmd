@@ -13,21 +13,23 @@ Each case in this dataset represents an individual day in the collection of data
 ```{r}
 
 ```
-
 From this dataset, we will most likely be utilizing all of the variables which include: entity (country), code (country code), date (currently not in m/d/y format), total confirmed deaths per million, and total confirmed cases per million. (JOEY, need code to show the column names here)
 ```{r}
 
 ```
 2. Dataset 2 - CountryData
-This dataset was accessed through the DataComputing Package.
+This dataset was accessed through the DataComputing Package.  This data is collected and maintained by the CIA factbook.  It was collected so that there is some type of database that contains various "geographic, demographic, and economic data" for each country.  
+Each case in this dataset represents an individual country, and there are 256 countries displayed in the dataset in total. (JOEY, need code to show how many individual cases there are)
+```{r}
 
-Where did you find them?
-Who collected/maintains them?
-When & Why were they originally collected?
-What does a case represent in each data source, and how many total cases are available?
-What are some of the variables that you plan to use
-The R Notebook should include R code chunks & output as well as narrative (bullet list is fine at this stage) as you answer these questions
+```
+From this dataset, we will be utilizing many of the variables that relate to the classifications of socio-economic development.  For example, we will definitely have use for "pop" (the number of people), "growth" (the growth rate per year), "birth" (birth rate per 1000 people), and death (death rate per 1000 people). (JOEY, need code here to show the column names)
+```{r}
 
+```
+
+
+## Exploration
 Explore intuition related to the research question
 Create some informative plots and summary statistics 
 Describe preliminary observations and intuition about the research question
