@@ -14,7 +14,7 @@ How do different aspects of determining how developed a country is (such as birt
 
 1. Dataset 1 - Total COVID Cases and Deaths per Million
 This dataset was accessed through the "Our World in Data" website.  Our World in Data collects their information on health from the European CDC, who reports on the progression of the COVID-19 pandemic for the whole world.  They shifted away from using data from the World Health Organization because they found many errors in reporting as well as a more significant lag time in data publishing.  This data is collected to stengthen the world's "defense against infectious diseases" and to keep the most updated tracking possible on the COVID-19 pandemic.  
-Each case in this dataset represents an individual day in the collection of data on COVID-19.  In total, there are 9,487 individual cases.   (JOEY, need code to show how many individual cases there are)
+Each case in this dataset represents an individual day in the collection of data on COVID-19.  In total, there are 9,487 individual cases.  
 ```{r}
 
 COVID <- read.csv("/Users/joeypevner/Final-Project/total-covid-cases-deaths-per-million.csv") %>%
@@ -60,7 +60,7 @@ COVID %>%
 
 2. Dataset 2 - CountryData
 This dataset was accessed through the DataComputing Package.  This data is collected and maintained by the CIA factbook.  It was collected so that there is some type of database that contains various "geographic, demographic, and economic data" for each country.  
-Each case in this dataset represents an individual country, and there are 256 countries displayed in the dataset in total. (JOEY, need code to show how many individual cases there are)
+Each case in this dataset represents an individual country, and there are 256 countries displayed in the dataset in total. 
 ```{r}
 CountryData
 ```
@@ -76,7 +76,7 @@ CountryData %>%
 ```
 
 
-From this dataset, we will be utilizing many of the variables that relate to the classifications of socio-economic development.  For example, we will definitely have use for "pop" (the number of people), "growth" (the growth rate per year), "birth" (birth rate per 1000 people), and death (death rate per 1000 people). (JOEY, need code here to show the column names)
+From this dataset, we will be utilizing many of the variables that relate to the classifications of socio-economic development.  For example, we will definitely have use for "pop" (the number of people), "growth" (the growth rate per year), "birth" (birth rate per 1000 people), and death (death rate per 1000 people). 
 ```{r}
 
 CountryData %>%
@@ -107,7 +107,7 @@ ggplot(data = All,aes(x = Date, y = CasesPerMillion)) +
 
 
 ```
-
+This graph shows that the total cases per million have increased significantly since January of 2020.  While this is rather intuitive data, we will go into more indepth analysis about how different countries have progressed since January, and which are still experiencing a high growth rate in number of cases.
 ```{r}
 
 February1 <-
@@ -174,7 +174,7 @@ Growth <-
 Growth
 
 ```
-
+At the end of this table, you can see the addition of our columns called CasesPerMillionFebGrowth, DeathsPerMillionFebGrowth, CasesPerMillionMarchGrowth and DeathsPerMillionMarchGrowth.  These show the change in the variables Deaths Per Million and Cases Per Million to show the change from the first day of the month to the last day of the month.  This data can be further analyzed in many ways that will allow us to see the progression of the virus against different traits of a county.
 
 
 
@@ -186,7 +186,7 @@ ggplot(data = Growth, aes(x = obesity,y = CasesPerMillionFebGrowth)) +
 
 
 ```
-
+In this graph, you can see that there is little to no direct relationship between the growth in cases in a country and the obesity in that country.  This determines that these two will not be futher considered and explored in our analysis of the two datasets.
 
 ```{r}
 ggplot(data=Growth, aes(x = airports,y = CasesPerMillionMarchGrowth)) +
@@ -215,6 +215,5 @@ ggplot(data=Growth, aes(x=health, y = DeathsPerMillionMarchGrowth)) +
 
 
 ```
-
 
 
