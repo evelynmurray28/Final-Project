@@ -17,19 +17,71 @@ This dataset was accessed through the "Our World in Data" website.  Our World in
 Each case in this dataset represents an individual day in the collection of data on COVID-19.  In total, there are 9,487 individual cases.   (JOEY, need code to show how many individual cases there are)
 ```{r}
 
-```
-From this dataset, we will most likely be utilizing all of the variables which include: entity (country), code (country code), date (currently not in m/d/y format), total confirmed deaths per million, and total confirmed cases per million. (JOEY, need code to show the column names here)
-```{r}
+COVID <- read.csv("/Users/joeypevner/Final-Project/total-covid-cases-deaths-per-million.csv") %>%
+  rename(c("country" = "total.covid.cases.deaths.per.million") ) %>%
+  rename(c("Code" = "X") ) %>%
+  rename(c("Date" = "X.1") ) %>%
+  rename(c("DeathsPerMillion" = "X.2")) %>%
+  rename(c("CasesPerMillion" = "X.3")) %>%
+  filter(row_number() > 1) %>%
+  subset(select = c(1,2,3,4,5)) %>%
+  mutate( country = as.character(country) ) %>%
+  mutate( Code = as.character(Code) ) %>%
+  mutate(Date = mdy(Date)) %>%
+  mutate(DeathsPerMillion = as.integer(DeathsPerMillion)) %>%
+  mutate(CasesPerMillion = as.integer(CasesPerMillion))
+
+COVID
 
 ```
+
+
+
+```{r}
+
+COVID%>%
+  nrow()
+
+```
+
+
+
+
+
+From this dataset, we will most likely be utilizing all of the variables which include: entity (country), code (country code), date (currently not in m/d/y format), total confirmed deaths per million, and total confirmed cases per million.
+```{r}
+COVID %>%
+  names()
+```
+
+
+
+
+
 2. Dataset 2 - CountryData
 This dataset was accessed through the DataComputing Package.  This data is collected and maintained by the CIA factbook.  It was collected so that there is some type of database that contains various "geographic, demographic, and economic data" for each country.  
 Each case in this dataset represents an individual country, and there are 256 countries displayed in the dataset in total. (JOEY, need code to show how many individual cases there are)
 ```{r}
+CountryData
+```
+
+
+```{r}
+
+
+CountryData %>%
+  nrow()
+
 
 ```
+
+
 From this dataset, we will be utilizing many of the variables that relate to the classifications of socio-economic development.  For example, we will definitely have use for "pop" (the number of people), "growth" (the growth rate per year), "birth" (birth rate per 1000 people), and death (death rate per 1000 people). (JOEY, need code here to show the column names)
 ```{r}
+
+CountryData %>%
+  names()
+
 
 ```
 
@@ -39,4 +91,32 @@ From this dataset, we will be utilizing many of the variables that relate to the
 Explore intuition related to the research question
 Create some informative plots and summary statistics 
 Describe preliminary observations and intuition about the research question
+
+
+
+
+```{r}
+All <- left_join(COVID, CountryData)
+```
+
+
+```{r}
+
+ggplot(data = All,aes(x = Date, y = CasesPerMillion)) +
+  geom_point() 
+
+
+```
+
+```{r}
+
+
+```
+
+
+
+
+
+
+
 
