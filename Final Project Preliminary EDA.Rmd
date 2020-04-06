@@ -193,7 +193,7 @@ ggplot(data=Growth, aes(x = airports,y = CasesPerMillionMarchGrowth)) +
   geom_point()
 
 ```
-
+This graph would most likely need some manipulation to either remove or alter the effect of the outlier.  However, this graph is meant to show the relationship between the number of airports in a country and their growth in COVID_19 cases throughout the month of March.  This trend most likely would be very positive in the first two weeks of March (when travel was much less restricted) than in the last two weeks.  This would be a trend that would be interesting to further investigate for our analysis.
 
 
 
@@ -205,7 +205,7 @@ ggplot(data=Growth,aes(x = CasesPerMillionFebGrowth,y = CasesPerMillionMarchGrow
 
 
 ```
-
+This graph shows the negative trend between the CasesPerMillion Growths between February and March.  That means that, for most countries, the higher the case per million growth in February, the lower the case per million growth in March.  The opposite is also true, where the higher the case per million March growth, the lower the case per million February growth.  This is most likely becuase those countries who had higher rates in February took more restrictive measures during this month, while those who had lower rates had not made those same adjustments yet.
 
 
 ```{r}
