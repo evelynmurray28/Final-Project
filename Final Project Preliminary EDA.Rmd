@@ -29,7 +29,7 @@ From this dataset, we will be utilizing many of the variables that relate to the
 ```
 
 
-## Exploration
+## Intuitive Exploration
 Explore intuition related to the research question
 Create some informative plots and summary statistics 
 Describe preliminary observations and intuition about the research question
