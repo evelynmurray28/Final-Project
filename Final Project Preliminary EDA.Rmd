@@ -215,5 +215,5 @@ ggplot(data=Growth, aes(x=health, y = DeathsPerMillionMarchGrowth)) +
 
 
 ```
-
+This final graph shows that there is not necessarily a clean relationship between the health spending as a % of the GDP and the deaths per million people growth in the month of March.  Countries with relatively high spending saw both high and low deaths per million, as did those with low.  This graph could possibility be altered with the addition of other factors to make it more meaningful, but right now, this lack of relationship is not particuluarly helpful in our analysis.
 
