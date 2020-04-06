@@ -28,8 +28,8 @@ COVID <- read.csv("/Users/joeypevner/Final-Project/total-covid-cases-deaths-per-
   mutate( country = as.character(country) ) %>%
   mutate( Code = as.character(Code) ) %>%
   mutate(Date = mdy(Date)) %>%
-  mutate(DeathsPerMillion = as.integer(DeathsPerMillion)) %>%
-  mutate(CasesPerMillion = as.integer(CasesPerMillion))
+  mutate(DeathsPerMillion = as.integer(DeathsPerMillion) - 1) %>%
+  mutate(CasesPerMillion = as.integer(CasesPerMillion) - 1)
 
 COVID
 
@@ -110,6 +110,87 @@ ggplot(data = All,aes(x = Date, y = CasesPerMillion)) +
 
 ```{r}
 
+February1 <-
+  COVID %>%
+  filter(Date == "2020-02-01") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionFeb1" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionFeb1" = "CasesPerMillion"))
+
+February29 <- 
+  COVID %>%
+  filter(Date == "2020-02-29") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionFeb29" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionFeb29" = "CasesPerMillion"))
+
+FebGrow <-
+  full_join(February1, February29, by = c("country")) %>%
+  mutate("CasesPerMillionFebGrowth" = CasesPerMillionFeb29 - CasesPerMillionFeb1) %>%
+  mutate("DeathsPerMillionFebGrowth" = DeathsPerMillionFeb29 - DeathsPerMillionFeb1)
+
+
+
+
+March1 <-
+  COVID %>%
+  filter(Date == "2020-03-01") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionMarch1" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionMarch1" = "CasesPerMillion"))
+
+March31 <- 
+  COVID %>%
+  filter(Date == "2020-03-31") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionMarch31" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionMarch31" = "CasesPerMillion"))
+```
+```{r}
+MarchGrow <-
+  full_join(March1, March31, by = c("country")) %>%
+  mutate("CasesPerMillionMarchGrowth" = CasesPerMillionMarch31 - CasesPerMillionMarch1) %>%
+  mutate("DeathsPerMillionMarchGrowth" = DeathsPerMillionMarch31 - DeathsPerMillionMarch1)
+
+
+```
+
+```{r}
+
+
+FebGrow <-
+  FebGrow %>%
+  subset(select = c(1, 6, 7))
+
+MarchGrow <-
+  MarchGrow %>%
+  subset(select = c(1, 6, 7))
+
+Growth <-
+  All %>%
+  left_join(FebGrow) %>%
+  left_join(MarchGrow)
+
+Growth
+
+```
+
+
+
+
+```{r}
+
+
+ggplot(data = Growth, aes(x = obesity,y = CasesPerMillionFebGrowth)) + 
+  geom_point() 
+
+
+```
+
+
+```{r}
+ggplot(data=Growth, aes(x = airports,y = CasesPerMillionMarchGrowth)) +
+  geom_point()
 
 ```
 
@@ -117,6 +198,23 @@ ggplot(data = All,aes(x = Date, y = CasesPerMillion)) +
 
 
 
+```{r}
+
+ggplot(data=Growth,aes(x = CasesPerMillionFebGrowth,y = CasesPerMillionMarchGrowth)) +
+  geom_point() 
+
+
+```
+
+
+
+```{r}
+
+ggplot(data=Growth, aes(x=health, y = DeathsPerMillionMarchGrowth)) +
+  geom_point() 
+
+
+```
 
 
 
