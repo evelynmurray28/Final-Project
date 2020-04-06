@@ -5,12 +5,12 @@ authors: Evelyn Murray and Joseph Pevner
 ---
 
 
-##Guiding Question (i.e., Research Question):
+## Guiding Question (i.e., Research Question):
 
 How do different aspects of determining how developed a country is (such as birth rate, population, death rate, etc.) manifest themselves in the spread of COVID-19.  Essentially, how does COVID-19 show different levels of impact on different countries?
 
 
-##Data Source Exploration
+## Data Source Exploration
 
 1. Dataset 1 - Total COVID Cases and Deaths per Million
 This dataset was accessed through the "Our World in Data" website.  Our World in Data collects their information on health from the European CDC, who reports on the progression of the COVID-19 pandemic for the whole world.  They shifted away from using data from the World Health Organization because they found many errors in reporting as well as a more significant lag time in data publishing.  This data is collected to stengthen the world's "defense against infectious diseases" and to keep the most updated tracking possible on the COVID-19 pandemic.  
