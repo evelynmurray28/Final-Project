@@ -1,19 +1,83 @@
 ---
-title: "Final Project Preliminary EDA"
+title: "Final Project Rough Draft"
 output: html_notebook
 authors: "Evelyn Murray and Joseph Pevner"
 ---
+
+```{r}
+library(mosaic)
+library(tidyverse)
+library(lubridate)
+library(DataComputing)
+library(rvest)
+```
 
 ONCE YOU GO THROUGH AND MAKE THE GRAPHS, I CAN GO THROUGH AND EXPLAIN EVERYTHING AND MAKE IT PRETTY :)
 ## Guiding Question (i.e., Research Question):
 
 How do different aspects of determining how developed a country is (such as birth rate, population, death rate, etc.) manifest themselves in the spread of COVID-19.  Essentially, how does COVID-19 show different levels of impact on different countries?
 
-Reading in the Data:
-JOEY: This code still won't run on my computer, so I need you to either run the code or change it so that it can be run on other computers
-```{r}
 
-COVID <- read.csv("/Users/joeypevner/Final-Project/total-covid-cases-deaths-per-million.csv") %>%
+## Data Access
+
+Reading in the Data:
+
+
+
+Data Source 1: COVID
+```{r}
+COVID <- read.csv(file = "total-covid-cases-deaths-per-million.csv")
+COVID
+```
+
+```{r}
+COVID %>%
+  nrow()
+```
+```{r}
+COVID %>%
+  names()
+```
+```{r}
+COVID %>%
+  head()
+```
+
+
+
+Data Source 2: CountryData
+```{r}
+CountryData
+```
+
+```{r}
+CountryData %>%
+  nrow()
+```
+```{r}
+CountryData %>%
+  names()
+```
+```{r}
+CountryData %>%
+  head()
+```
+
+
+
+
+
+
+### Data Wrangling of COVID Dataset
+
+```{r}
+COVID
+```
+
+
+```{r}
+TidyCOVID <-
+  COVID %>%
   rename(c("country" = "total.covid.cases.deaths.per.million") ) %>%
   rename(c("Code" = "X") ) %>%
   rename(c("Date" = "X.1") ) %>%
@@ -27,27 +91,26 @@ COVID <- read.csv("/Users/joeypevner/Final-Project/total-covid-cases-deaths-per-
   mutate(DeathsPerMillion = as.integer(DeathsPerMillion) - 1) %>%
   mutate(CasesPerMillion = as.integer(CasesPerMillion) - 1)
 
-COVID
-
 ```
 
-## Data Sources
-JOEY: Access to all data sources is contained within the analysis. 
 
-I think this means that we need a link or a way for people to be able to access the data, but maybe I am misunderstanding this.  Let me know what you think.
+```{r}
+TidyCOVID
+
+```
 
 
 
 
 ## Data Visualization
 ```{r}
-All <- left_join(COVID, CountryData)
+DataMix <- left_join(TidyCOVID, CountryData, by = "country")
 ```
 
 JOEY: I think this is a good one to start out with, but if there is some way that you could make this more clear (color code, etc.) that would be great.  This is a good start to our data.
 ```{r}
 
-ggplot(data = All,aes(x = Date, y = CasesPerMillion)) +
+ggplot(data = DataMix,aes(x = Date, y = CasesPerMillion)) +
   geom_point() 
 
 
@@ -75,4 +138,5 @@ JOEY: I think one more graph here will be sufficient. Can we do one that compare
 ```{r}
 
 ```
+
 
