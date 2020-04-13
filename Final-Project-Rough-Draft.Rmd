@@ -12,7 +12,6 @@ library(DataComputing)
 library(rvest)
 ```
 
-ONCE YOU GO THROUGH AND MAKE THE GRAPHS, I CAN GO THROUGH AND EXPLAIN EVERYTHING AND MAKE IT PRETTY :)
 ## Guiding Question (i.e., Research Question):
 
 How do different aspects of determining how developed a country is (such as birth rate, population, death rate, etc.) manifest themselves in the spread of COVID-19.  Essentially, how does COVID-19 show different levels of impact on different countries?
@@ -21,7 +20,6 @@ How do different aspects of determining how developed a country is (such as birt
 ## Data Access
 
 Reading in the Data:
-
 
 
 Data Source 1: COVID
@@ -65,6 +63,24 @@ CountryData %>%
 
 
 
+Data Source 1: Continents
+```{r}
+Continents <- read.csv(file = "countries and continents.csv")
+Continents
+```
+```{r}
+Continents %>%
+  nrow()
+```
+```{r}
+Continents %>%
+  names()
+```
+```{r}
+Continents %>%
+  head()
+```
+
 
 
 
@@ -99,6 +115,25 @@ TidyCOVID
 
 ```
 
+### Data Wrangling of Continents
+```{r}
+Continents
+
+```
+
+```{r}
+TidyCont <-
+  Continents %>%
+  filter(row_number() > 2) %>%
+  subset(select = c(1,23)) %>%
+  rename(c("country" = "name") ) %>%
+  mutate( country = as.character(country) ) %>%
+  mutate( Continent = as.character(Continent) )
+
+TidyCont
+
+
+```
 
 
 
@@ -138,5 +173,4 @@ JOEY: I think one more graph here will be sufficient. Can we do one that compare
 ```{r}
 
 ```
-
 
