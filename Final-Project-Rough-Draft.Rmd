@@ -92,8 +92,7 @@ COVID
 
 
 ```{r}
-TidyCOVID <-
-  COVID %>%
+TidyCOVID <- COVID %>%
   rename(c("country" = "total.covid.cases.deaths.per.million") ) %>%
   rename(c("Code" = "X") ) %>%
   rename(c("Date" = "X.1") ) %>%
@@ -106,6 +105,8 @@ TidyCOVID <-
   mutate(Date = mdy(Date)) %>%
   mutate(DeathsPerMillion = as.integer(DeathsPerMillion) - 1) %>%
   mutate(CasesPerMillion = as.integer(CasesPerMillion) - 1)
+
+TidyCOVID
 
 ```
 
