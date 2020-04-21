@@ -10,6 +10,7 @@ library(tidyverse)
 library(lubridate)
 library(DataComputing)
 library(rvest)
+library(broom)
 ```
 
 ## Guiding Question (i.e., Research Question):
@@ -63,7 +64,7 @@ CountryData %>%
 
 
 
-Data Source 1: Continents
+Data Source 3: Continents
 ```{r}
 Continents <- read.csv(file = "countries and continents.csv")
 Continents
@@ -116,6 +117,111 @@ TidyCOVID
 
 ```
 
+
+
+
+
+```{r}
+
+February1 <-
+  TidyCOVID %>%
+  filter(Date == "2020-02-01") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionFeb1" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionFeb1" = "CasesPerMillion"))
+
+February29 <- 
+  TidyCOVID %>%
+  filter(Date == "2020-02-29") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionFeb29" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionFeb29" = "CasesPerMillion"))
+
+FebGrow <-
+  full_join(February1, February29, by = c("country")) %>%
+  mutate("CasesPerMillionFebGrowth" = CasesPerMillionFeb29 - CasesPerMillionFeb1) %>%
+  mutate("DeathsPerMillionFebGrowth" = DeathsPerMillionFeb29 - DeathsPerMillionFeb1)
+
+
+
+
+March1 <-
+  TidyCOVID %>%
+  filter(Date == "2020-03-01") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionMarch1" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionMarch1" = "CasesPerMillion"))
+
+March31 <- 
+  TidyCOVID %>%
+  filter(Date == "2020-03-31") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionMarch31" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionMarch31" = "CasesPerMillion"))
+
+MarchGrow <-
+  full_join(March1, March31, by = c("country")) %>%
+  mutate("CasesPerMillionMarchGrowth" = CasesPerMillionMarch31 - CasesPerMillionMarch1) %>%
+  mutate("DeathsPerMillionMarchGrowth" = DeathsPerMillionMarch31 - DeathsPerMillionMarch1)
+
+
+
+December31 <-
+  TidyCOVID %>%
+  filter(Date == "2019-12-31") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionDecember31" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionDecember31" = "CasesPerMillion"))
+
+
+April5 <-
+  TidyCOVID %>%
+  filter(Date == "2020-04-05") %>%
+  subset(select = c(1,4,5)) %>%
+  rename(c("DeathsPerMillionApril5" = "DeathsPerMillion")) %>%
+  rename(c("CasesPerMillionApril5" = "CasesPerMillion"))
+
+TotalGrow <-
+  full_join(December31, April5, by = c("country")) %>%
+  mutate("CasesPerMillionTotalGrowth" = CasesPerMillionApril5 - CasesPerMillionDecember31) %>%
+  mutate("DeathsPerMillionTotalGrowth" = DeathsPerMillionApril5 - DeathsPerMillionDecember31)
+
+
+```
+
+```{r}
+
+
+FebGrow <-
+  FebGrow %>%
+  subset(select = c(1, 6, 7))
+
+MarchGrow <-
+  MarchGrow %>%
+  subset(select = c(1, 6, 7))
+
+TotalGrow <-
+  TotalGrow %>%
+  subset(select = c(1, 6, 7))
+
+
+Growth <-
+  left_join(FebGrow,MarchGrow) %>%
+  left_join(TotalGrow)
+
+Growth
+
+```
+
+
+
+
+
+
+
+
+
+
 ### Data Wrangling of Continents
 ```{r}
 Continents
@@ -137,17 +243,22 @@ TidyCont
 ```
 
 
+```{r}
+COVIDwCont <-
+  left_join(TidyCOVID, TidyCont, by = "country")
+```
 
 ## Data Visualization
 ```{r}
-DataMix <- left_join(TidyCOVID, CountryData, by = "country")
+DataMix <- left_join(COVIDwCont, CountryData, by = "country")
 ```
 
 JOEY: I think this is a good one to start out with, but if there is some way that you could make this more clear (color code, etc.) that would be great.  This is a good start to our data.
 ```{r}
 
 ggplot(data = DataMix,aes(x = Date, y = CasesPerMillion)) +
-  geom_point() 
+  geom_point() +
+  facet_wrap(~Continent)
 
 
 ```
@@ -156,22 +267,85 @@ JOEY: I like this graph because it visualizes one of the factors that contribute
 
 ```{r}
 
-ggplot(data=Growth, aes(x=health, y = DeathsPerMillionMarchGrowth)) +
-  geom_point() 
+ggplot(data= DataMix, aes(x= Date, y = DeathsPerMillion)) +
+  geom_point() +
+  facet_wrap(~Continent)
 
 
 ```
 
-JOEY:  I also liked this graph, but we need to remove the outlier that scews it and makes the scale hard to see a relationship.  It is the one with an X-value of over 10,000
+
+
+
 
 ```{r}
-ggplot(data=Growth, aes(x = airports,y = CasesPerMillionMarchGrowth)) +
+
+GrowthMix <-left_join(Growth, CountryData, by = "country")
+
+
+```
+
+
+
+```{r}
+ggplot(data=GrowthMix, aes(x = airports,y = CasesPerMillionTotalGrowth)) +
+  geom_point() +
+  xlim(0,5000)
+
+```
+
+```{r}
+
+ggplot(data=GrowthMix, aes(x = health,y = CasesPerMillionTotalGrowth)) +
+  geom_point()
+
+```
+```{r}
+
+ggplot(data=GrowthMix, aes(x = health,y = DeathsPerMillionTotalGrowth)) +
   geom_point()
 
 ```
 
-JOEY: I think one more graph here will be sufficient. Can we do one that compares the relationship between Cases per Million, Deaths per million, and population!!! Maybe something like a cloropleth graph (I think thats what I'm thinking of)?
+```{r}
+GrowthMix %>%
+  arrange(desc(CasesPerMillionTotalGrowth))
+```
+
+
+
+
 ```{r}
 
+WorldMap(GrowthMix, key = country, fill = CasesPerMillionTotalGrowth)
+
 ```
+
+```{r}
+
+ShowChange <-
+  GrowthMix %>%
+  select(c(1, 6, 7, 9)) %>%
+  filter(country != "Africa",
+         country != "Asia",
+         country != "Europe",
+         country != "North America",
+         country != "Oceania",
+         country != "South America",
+         country != "World"
+         ) %>%
+  mutate("TotalGrowth" = (CasesPerMillionTotalGrowth * round(pop/1000000, digits = 0))) %>%
+  mutate("TotalDeath" = (DeathsPerMillionTotalGrowth * round(pop/1000000, digits = 0)))
+
+ShowChange %>%
+  arrange(desc(TotalDeath))
+```
+
+
+
+
+
+
+
+
 
