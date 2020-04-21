@@ -94,11 +94,11 @@ COVID
 
 ```{r}
 TidyCOVID <- COVID %>%
-  rename(c("country" = "total.covid.cases.deaths.per.million") ) %>%
-  rename(c("Code" = "X") ) %>%
-  rename(c("Date" = "X.1") ) %>%
-  rename(c("DeathsPerMillion" = "X.2")) %>%
-  rename(c("CasesPerMillion" = "X.3")) %>%
+  rename(country = total.covid.cases.deaths.per.million ) %>%
+  rename( Code = X ) %>%
+  rename(Date = X.1 ) %>%
+  rename(DeathsPerMillion = X.2) %>%
+  rename(CasesPerMillion = X.3) %>%
   filter(row_number() > 1) %>%
   subset(select = c(1,2,3,4,5)) %>%
   mutate( country = as.character(country) ) %>%
@@ -127,15 +127,15 @@ February1 <-
   TidyCOVID %>%
   filter(Date == "2020-02-01") %>%
   subset(select = c(1,4,5)) %>%
-  rename(c("DeathsPerMillionFeb1" = "DeathsPerMillion")) %>%
-  rename(c("CasesPerMillionFeb1" = "CasesPerMillion"))
+  rename(DeathsPerMillionFeb1 = DeathsPerMillion) %>%
+  rename(CasesPerMillionFeb1 = CasesPerMillion)
 
 February29 <- 
   TidyCOVID %>%
   filter(Date == "2020-02-29") %>%
   subset(select = c(1,4,5)) %>%
-  rename(c("DeathsPerMillionFeb29" = "DeathsPerMillion")) %>%
-  rename(c("CasesPerMillionFeb29" = "CasesPerMillion"))
+  rename(DeathsPerMillionFeb29 = DeathsPerMillion) %>%
+  rename(CasesPerMillionFeb29 = CasesPerMillion)
 
 FebGrow <-
   full_join(February1, February29, by = c("country")) %>%
@@ -149,15 +149,15 @@ March1 <-
   TidyCOVID %>%
   filter(Date == "2020-03-01") %>%
   subset(select = c(1,4,5)) %>%
-  rename(c("DeathsPerMillionMarch1" = "DeathsPerMillion")) %>%
-  rename(c("CasesPerMillionMarch1" = "CasesPerMillion"))
+  rename(DeathsPerMillionMarch1 = DeathsPerMillion) %>%
+  rename(CasesPerMillionMarch1 = CasesPerMillion)
 
 March31 <- 
   TidyCOVID %>%
   filter(Date == "2020-03-31") %>%
   subset(select = c(1,4,5)) %>%
-  rename(c("DeathsPerMillionMarch31" = "DeathsPerMillion")) %>%
-  rename(c("CasesPerMillionMarch31" = "CasesPerMillion"))
+  rename(DeathsPerMillionMarch31 = DeathsPerMillion) %>%
+  rename(CasesPerMillionMarch31 = CasesPerMillion)
 
 MarchGrow <-
   full_join(March1, March31, by = c("country")) %>%
@@ -170,16 +170,16 @@ December31 <-
   TidyCOVID %>%
   filter(Date == "2019-12-31") %>%
   subset(select = c(1,4,5)) %>%
-  rename(c("DeathsPerMillionDecember31" = "DeathsPerMillion")) %>%
-  rename(c("CasesPerMillionDecember31" = "CasesPerMillion"))
+  rename(DeathsPerMillionDecember31 = DeathsPerMillion) %>%
+  rename(CasesPerMillionDecember31 = CasesPerMillion)
 
 
 April5 <-
   TidyCOVID %>%
   filter(Date == "2020-04-05") %>%
   subset(select = c(1,4,5)) %>%
-  rename(c("DeathsPerMillionApril5" = "DeathsPerMillion")) %>%
-  rename(c("CasesPerMillionApril5" = "CasesPerMillion"))
+  rename(DeathsPerMillionApril5 = DeathsPerMillion) %>%
+  rename(CasesPerMillionApril5 = CasesPerMillion)
 
 TotalGrow <-
   full_join(December31, April5, by = c("country")) %>%
@@ -233,7 +233,7 @@ TidyCont <-
   Continents %>%
   filter(row_number() > 2) %>%
   subset(select = c(1,23)) %>%
-  rename(c("country" = "name") ) %>%
+  rename(country = name ) %>%
   mutate( country = as.character(country) ) %>%
   mutate( Continent = as.character(Continent) )
 
@@ -314,13 +314,6 @@ GrowthMix %>%
 
 
 
-
-```{r}
-
-WorldMap(GrowthMix, key = country, fill = CasesPerMillionTotalGrowth)
-
-```
-
 ```{r}
 
 ShowChange <-
@@ -345,7 +338,11 @@ ShowChange %>%
 
 
 
+```{r}
 
+WorldMap(ShowChange, key = country, fill = TotalGrowth)
+
+```
 
 
 
