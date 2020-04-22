@@ -13,9 +13,40 @@ library(rvest)
 library(broom)
 ```
 
-## Guiding Question (i.e., Research Question):
+## Research Focus:
+
+As COVID-19 spreads at an alarming rate, a pressing question at a global scale emerges-- what factors of a country contribute to the spread of Coronavirus. Most often cited factors of spread are 
+
+
 
 How do different aspects of determining how developed a country is (such as birth rate, population, death rate, etc.) manifest themselves in the spread of COVID-19.  Essentially, how does COVID-19 show different levels of impact on different countries?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ## Data Access
