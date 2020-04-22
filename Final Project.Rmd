@@ -15,38 +15,7 @@ library(broom)
 
 ## Research Focus:
 
-As COVID-19 spreads at an alarming rate, a pressing question at a global scale emerges-- what factors of a country contribute to the spread of Coronavirus. Most often cited factors of spread are 
-
-
-
-How do different aspects of determining how developed a country is (such as birth rate, population, death rate, etc.) manifest themselves in the spread of COVID-19.  Essentially, how does COVID-19 show different levels of impact on different countries?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+As COVID-19 spreads at an alarming rate, a pressing question at a global scale emerges-- what factors of a country contribute to the spread of Coronavirus. The factors which we will analyze are: population density, and proximity to origin point (China).
 
 
 ## Data Access
@@ -122,23 +91,20 @@ Continents %>%
 COVID
 ```
 
+Since we are soley focused on the spread of COVID-19, filter out death count.
 
 ```{r}
 TidyCOVID <- COVID %>%
   rename(country = total.covid.cases.deaths.per.million ) %>%
   rename( Code = X ) %>%
   rename(Date = X.1 ) %>%
-  rename(DeathsPerMillion = X.2) %>%
   rename(CasesPerMillion = X.3) %>%
   filter(row_number() > 1) %>%
-  subset(select = c(1,2,3,4,5)) %>%
+  subset(select = c(1,3,5)) %>%
   mutate( country = as.character(country) ) %>%
-  mutate( Code = as.character(Code) ) %>%
   mutate(Date = mdy(Date)) %>%
-  mutate(DeathsPerMillion = as.integer(DeathsPerMillion) - 1) %>%
   mutate(CasesPerMillion = as.integer(CasesPerMillion) - 1)
 
-TidyCOVID
 
 ```
 
@@ -150,206 +116,27 @@ TidyCOVID
 
 
 
-
-
 ```{r}
 
-February1 <-
-  TidyCOVID %>%
-  filter(Date == "2020-02-01") %>%
-  subset(select = c(1,4,5)) %>%
-  rename(DeathsPerMillionFeb1 = DeathsPerMillion) %>%
-  rename(CasesPerMillionFeb1 = CasesPerMillion)
-
-February29 <- 
-  TidyCOVID %>%
-  filter(Date == "2020-02-29") %>%
-  subset(select = c(1,4,5)) %>%
-  rename(DeathsPerMillionFeb29 = DeathsPerMillion) %>%
-  rename(CasesPerMillionFeb29 = CasesPerMillion)
-
-FebGrow <-
-  full_join(February1, February29, by = c("country")) %>%
-  mutate("CasesPerMillionFebGrowth" = CasesPerMillionFeb29 - CasesPerMillionFeb1) %>%
-  mutate("DeathsPerMillionFebGrowth" = DeathsPerMillionFeb29 - DeathsPerMillionFeb1)
-
-
-
-
-March1 <-
-  TidyCOVID %>%
-  filter(Date == "2020-03-01") %>%
-  subset(select = c(1,4,5)) %>%
-  rename(DeathsPerMillionMarch1 = DeathsPerMillion) %>%
-  rename(CasesPerMillionMarch1 = CasesPerMillion)
-
-March31 <- 
-  TidyCOVID %>%
-  filter(Date == "2020-03-31") %>%
-  subset(select = c(1,4,5)) %>%
-  rename(DeathsPerMillionMarch31 = DeathsPerMillion) %>%
-  rename(CasesPerMillionMarch31 = CasesPerMillion)
-
-MarchGrow <-
-  full_join(March1, March31, by = c("country")) %>%
-  mutate("CasesPerMillionMarchGrowth" = CasesPerMillionMarch31 - CasesPerMillionMarch1) %>%
-  mutate("DeathsPerMillionMarchGrowth" = DeathsPerMillionMarch31 - DeathsPerMillionMarch1)
-
-
-
-December31 <-
-  TidyCOVID %>%
-  filter(Date == "2019-12-31") %>%
-  subset(select = c(1,4,5)) %>%
-  rename(DeathsPerMillionDecember31 = DeathsPerMillion) %>%
-  rename(CasesPerMillionDecember31 = CasesPerMillion)
-
-
-April5 <-
-  TidyCOVID %>%
-  filter(Date == "2020-04-05") %>%
-  subset(select = c(1,4,5)) %>%
-  rename(DeathsPerMillionApril5 = DeathsPerMillion) %>%
-  rename(CasesPerMillionApril5 = CasesPerMillion)
-
-TotalGrow <-
-  full_join(December31, April5, by = c("country")) %>%
-  mutate("CasesPerMillionTotalGrowth" = CasesPerMillionApril5 - CasesPerMillionDecember31) %>%
-  mutate("DeathsPerMillionTotalGrowth" = DeathsPerMillionApril5 - DeathsPerMillionDecember31)
-
+RelevantCountryData <-
+  CountryData %>%
+  subset(select = c(1,2,3)) %>%
+  mutate(popdensity = round(pop/area, digits = 2))
 
 ```
 
 ```{r}
 
-
-FebGrow <-
-  FebGrow %>%
-  subset(select = c(1, 6, 7))
-
-MarchGrow <-
-  MarchGrow %>%
-  subset(select = c(1, 6, 7))
-
-TotalGrow <-
-  TotalGrow %>%
-  subset(select = c(1, 6, 7))
-
-
-Growth <-
-  left_join(FebGrow,MarchGrow) %>%
-  left_join(TotalGrow)
-
-Growth
-
-```
-
-
-
-
-
-
-
-
-
-
-### Data Wrangling of Continents
-```{r}
-Continents
-
-```
-
-```{r}
-TidyCont <-
-  Continents %>%
-  filter(row_number() > 2) %>%
-  subset(select = c(1,23)) %>%
-  rename(country = name ) %>%
-  mutate( country = as.character(country) ) %>%
-  mutate( Continent = as.character(Continent) )
-
-TidyCont
-
-
-```
-
-
-```{r}
-COVIDwCont <-
-  left_join(TidyCOVID, TidyCont, by = "country")
-```
-
-## Data Visualization
-```{r}
-DataMix <- left_join(COVIDwCont, CountryData, by = "country")
-```
-
-JOEY: I think this is a good one to start out with, but if there is some way that you could make this more clear (color code, etc.) that would be great.  This is a good start to our data.
-```{r}
-
-ggplot(data = DataMix,aes(x = Date, y = CasesPerMillion)) +
-  geom_point() +
-  facet_wrap(~Continent)
-
-
-```
-
-JOEY: I like this graph because it visualizes one of the factors that contributes to the development classification.  Can we add in a color code or something that would represent one more factor, such as different countries or regions of the world.  The more that we can do with this one, the better.
-
-```{r}
-
-ggplot(data= DataMix, aes(x= Date, y = DeathsPerMillion)) +
-  geom_point() +
-  facet_wrap(~Continent)
-
-
-```
-
-
-
-
-
-```{r}
-
-GrowthMix <-left_join(Growth, CountryData, by = "country")
-
+MasterData <- left_join(TidyCOVID, RelevantCountryData)
 
 ```
 
 
 
 ```{r}
-ggplot(data=GrowthMix, aes(x = airports,y = CasesPerMillionTotalGrowth)) +
-  geom_point() +
-  xlim(0,5000)
 
-```
-
-```{r}
-
-ggplot(data=GrowthMix, aes(x = health,y = CasesPerMillionTotalGrowth)) +
-  geom_point()
-
-```
-```{r}
-
-ggplot(data=GrowthMix, aes(x = health,y = DeathsPerMillionTotalGrowth)) +
-  geom_point()
-
-```
-
-```{r}
-GrowthMix %>%
-  arrange(desc(CasesPerMillionTotalGrowth))
-```
-
-
-
-```{r}
-
-ShowChange <-
-  GrowthMix %>%
-  select(c(1, 6, 7, 9)) %>%
+MasterData <-
+  MasterData %>%
   filter(country != "Africa",
          country != "Asia",
          country != "Europe",
@@ -358,12 +145,27 @@ ShowChange <-
          country != "South America",
          country != "World"
          ) %>%
-  mutate("TotalGrowth" = (CasesPerMillionTotalGrowth * round(pop/1000000, digits = 0))) %>%
-  mutate("TotalDeath" = (DeathsPerMillionTotalGrowth * round(pop/1000000, digits = 0)))
-
-ShowChange %>%
-  arrange(desc(TotalDeath))
+  mutate("Cases" = (CasesPerMillion * round(pop/1000000, digits = 0)))
+  
+  
+  MasterData
 ```
+
+
+
+```{r}
+
+FirstInstance <-
+  MasterData %>%
+  filter(Cases != 0) %>%
+  group_by(country) %>%
+  summarise(beginningofspread = min(Date))
+  
+FirstInstance
+
+
+```
+
 
 
 
@@ -371,9 +173,47 @@ ShowChange %>%
 
 ```{r}
 
-WorldMap(ShowChange, key = country, fill = TotalGrowth)
+DailySpread <-
+  left_join(MasterData, FirstInstance) %>%
+  filter(Date == "2020-04-05") %>%
+  mutate(dayselapsed = Date - beginningofspread) %>%
+  mutate(dailyspread = Cases / as.numeric(dayselapsed) ) %>%
+  arrange(desc(dailyspread))
 
 ```
 
 
 
+```{r}
+
+MasterData <-
+  left_join(MasterData, DailySpread)
+
+```
+
+```{r}
+
+
+ggplot(data=MasterData,aes(x=pop,y=dailyspread))+geom_point() 
+
+
+
+```
+
+
+
+
+```{r}
+MasterData
+
+```
+
+
+```{r}
+
+MasterData %>%
+  group_by(Date) %>%
+  summarise(totalcases = sum(Cases, na.rm=T)) %>%
+  ggplot(aes(x=Date,y=totalcases))+geom_point() 
+
+```
