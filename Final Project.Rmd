@@ -18,6 +18,8 @@ library(broom)
 As COVID-19 spreads at an alarming rate, a pressing question at a global scale emerges-- what factors of a country contribute to the spread of Coronavirus. We hope to analyze the relationship between population and average spread of COVID-19 across the six inhabeted continents.
 
 
+
+
 ## Data Access
 
 ### Reading in the Data:
@@ -44,7 +46,7 @@ COVID %>%
 
 
 
-Data Source 2: CountryData
+#### Data Source 2: CountryData
 ```{r}
 CountryData
 ```
@@ -62,7 +64,7 @@ CountryData %>%
   head()
 ```
 
-Data Source 3: countryRegions
+#### Data Source 3: countryRegions
 
 ```{r}
 countryRegions
@@ -83,9 +85,9 @@ countryRegions %>%
 
 
 
+## Data Wrangling
 
-
-### Data Wrangling of COVID Dataset
+### Tidying the COVID Dataset
 
 ```{r}
 COVID
@@ -114,12 +116,14 @@ TidyCOVID
 
 ```
 
-WHAT DOES AN INSTANCE REPRESENT NOW??
 
 
+EVELYN pls explain what an instance represents
 
-### Data Wrangling of countryRegions Dataset
 
+### Wrangling of countryRegions Dataset
+
+We will extract the ISO3 country code and continent from the countryRegions data. Since naming conventions of countries is variate, the ISO3 country code allows us a standardized demarcation of country with which to join with other data tables.
 
 ```{r}
 Labels <-
@@ -132,22 +136,20 @@ Labels
 ```
 
 
-### Data Wrangling of CountryData Dataset
+### Data Extraction of CountryData Dataset
 
-Select CountryData relevant to our analysis: area (sq km), pop (number of people)
-calculate new variable: popdensity: number of people per sq km
+We will select the aspects of CountryData relevant to our analysis. These attributes are: area (sq km) and pop (number of people).
 
 ```{r}
 
 RelevantCountryData <-
   CountryData %>%
-  subset(select = c(1,2,3)) %>%
-  mutate(popdensity = round(pop/area, digits = 2))
+  subset(select = c(1,2,3))
 
 RelevantCountryData
 ```
 
-
+### Joining Data & Relevant Variable Synthesis
 
 Calculate the number of cases in each country by multiplying casesPerMillion by population (in millions). This variable is now a standardized metric with which we can compare countries.
 ```{r}
@@ -163,9 +165,9 @@ COVIDGrowth <-
 COVIDGrowth
 ```
 
+### Creation of new Data Table: FirstInstance
 
-
-This table records the first date that a country recorded a nonzero number of COVID-19 cases.
+This table records the first date that a country recorded a nonzero number of COVID-19 cases. This datagraph will help us visualize /bwhen/ countries first became infected.
 ```{r}
 
 FirstInstance <-
@@ -273,7 +275,7 @@ na.omit(COVIDFinal) %>%
 
 
 
-Disregarding outliers
+WITHOUT OUTLIERS SHOWS STILL STRONG POSITIVE CORRELATION
 
 ```{r}
 
@@ -285,3 +287,24 @@ na.omit(COVIDFinal) %>%
 
 
 ```
+
+
+
+
+
+```{r}
+
+na.omit(FirstInstance) %>%
+  ggplot(aes(x = beginningofspread, fill = continent)) +
+  geom_dotplot(stackgroups = TRUE, binwidth = 1, binpositions="all") +
+  xlab("Country's First Case of COVID-19") +
+  theme(panel.background = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank())
+```
+
+
+
+
+
