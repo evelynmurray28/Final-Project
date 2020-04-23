@@ -20,10 +20,10 @@ As COVID-19 spreads at an alarming rate, a pressing question at a global scale e
 
 ## Data Access
 
-# Reading in the Data:
+### Reading in the Data:
 
 
-Data Source 1: COVID
+#### Data Source 1: COVID
 ```{r}
 COVID <- read.csv(file = "total-covid-cases-deaths-per-million.csv")
 COVID
