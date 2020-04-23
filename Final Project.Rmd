@@ -1,7 +1,7 @@
 ---
 title: "Final Project"
 output: html_notebook
-authors: "Evelyn Murray and Joseph Pevner"
+authors: "Joseph Pevner and Evelyn Murray"
 ---
 
 ```{r}
@@ -198,6 +198,8 @@ DailySpread <-
   subset(select = c("country", "beginningofspread", "dailyspread", "dailyspreadpermillion"))
 
 DailySpread$dailyspread[is.na(DailySpread$dailyspread)] <- 0
+DailySpread$dailyspreadpermillion[is.na(DailySpread$dailyspreadpermillion)] <- 0
+
 
 DailySpread
 ```
@@ -219,23 +221,6 @@ COVIDFinal
 
 ```
 
-### Readible Version-- Wide Countries
-
-```{r}
-
-WideCountries <-
-  COVIDFinal %>%
-  subset(select = c("country", "date", "cases")) %>%
-  spread(key = date, value = cases)
-
-WideCountries[is.na(WideCountries)] <- 0
-
-WideCountries
-
-```
-
-
-
 
 
 
@@ -246,7 +231,7 @@ WideCountries
 ## Data Visualization
 
 
-
+### Overall Growth of COVID-19 Over Time
 ```{r}
 
 COVIDFinal %>%
@@ -258,6 +243,12 @@ COVIDFinal %>%
   ylab("COVID-19 Cases")
 
 ```
+
+
+
+
+### Continental Growth of COVID-19 Over Time
+
 ```{r}
 
 na.omit(COVIDFinal) %>%
@@ -270,6 +261,25 @@ na.omit(COVIDFinal) %>%
   ylab("COVID-19 Cases")
 ```
 
+
+### Infection of COVID-19 into countries over time
+```{r}
+
+na.omit(FirstInstance) %>%
+  ggplot(aes(x = beginningofspread, fill = continent)) +
+  geom_dotplot(stackgroups = TRUE, binwidth = 1, binpositions="all") +
+  xlab("Country's First Case of COVID-19") +
+  theme(panel.background = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        axis.title.y = element_blank())
+```
+
+
+
+
+
+### Which countries have the highest infection rates?
 
 
 ```{r}
@@ -290,9 +300,27 @@ COVIDFinal %>%
 
 ```
 
+### Compare this to which countries have the highest populations
+
+```{r}
+
+COVIDFinal %>%
+  group_by(country) %>%
+  summarise(pop = mean(pop)) %>%
+  arrange(desc(pop)) %>%
+  head(20) %>%
+  ggplot(aes(x = reorder(country, desc(pop)), y= pop)) +
+  geom_bar(stat="identity", position = 'stack', width=.9) +
+  theme(axis.text.x=element_text(angle = 60, hjust = 1)) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  ylab("Population") +
+  theme(axis.title.x = element_blank())
 
 
+```
 
+
+### Let's visualize the relationship between population and COVID-19 spread on the same data frame... with an awareness of the continental distribution
 
 
 ```{r}
@@ -301,8 +329,7 @@ na.omit(COVIDFinal) %>%
   ggplot(aes(x = pop, y = dailyspread, color = continent)) + 
   geom_point() +
   xlab("Population of Country") +
-  ylab("Average Number Infected Per Day") +
-  stat_smooth(method = lm) 
+  ylab("Average Number Infected Per Day")
 
 
 
@@ -310,8 +337,8 @@ na.omit(COVIDFinal) %>%
 
 
 
-WITHOUT OUTLIERS SHOWS STILL STRONG POSITIVE CORRELATION
-
+### Does the relationship hold up after removing the largest outliers (China and India)?
+### Does the positive relationship hold up across all continents?
 ```{r}
 
 na.omit(COVIDFinal) %>%
@@ -329,21 +356,163 @@ na.omit(COVIDFinal) %>%
 
 
 
+### A prevailing explanation for the spread of COVID-19 is social closeness, therefore, we hypothesize that countries with the highest population density will have the highest proportional rates of infection. To measure the proportional rates of infection, it is essential to use a standardized metric, such that the data is not skewed towards the countries with simply the most people. Therefore, we will analyze the variable "population per million infected per day", which captures a representation of the percentage of a country's population that is effective. If our hypothesis is correct, the countries with the highest population per million infected per day will be those with the highest population density.
+
+
+### Which countries have the highest infection rates per million?
+
+
+```{r}
+  
+COVIDFinal %>%
+  group_by(country) %>%
+  summarise(dailyspreadpermillion = mean(dailyspreadpermillion)) %>%
+  arrange(desc(dailyspreadpermillion)) %>%
+  head(20) %>%
+  ggplot(aes(x = reorder(country, desc(dailyspreadpermillion)), y= dailyspreadpermillion)) +
+  geom_bar(stat="identity", position = 'stack', width=.9) +
+  theme(axis.text.x=element_text(angle = 60, hjust = 1)) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  ylab("Population Per Million Infected Per Day") +
+  theme(axis.title.x = element_blank())
+
+
+
+```
+
+### Which countries have the highest population density?
+
+```{r}
+  
+COVIDFinal %>%
+  group_by(country) %>%
+  summarise(popdensity = mean(popdensity)) %>%
+  arrange(desc(popdensity)) %>%
+  head(20) %>%
+  ggplot(aes(x = reorder(country, desc(popdensity)), y= popdensity)) +
+  geom_bar(stat="identity", position = 'stack', width=.9) +
+  theme(axis.text.x=element_text(angle = 60, hjust = 1)) +
+  scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
+  ylab("Population Density (people/sq km)") +
+  theme(axis.title.x = element_blank())
+
+
+
+```
+
+
+
+
+### Is there a visible correlation between these attributes?
+
+
+```{r}
+na.omit(COVIDFinal) %>%
+  ggplot(aes(x = popdensity, y = dailyspreadpermillion)) +
+  geom_point() 
+```
+
+
+### What if faceted by continent?
+
+```{r}
+na.omit(COVIDFinal) %>%
+  ggplot(aes(x = popdensity, y = dailyspreadpermillion)) +
+  geom_point() + 
+  facet_wrap(~continent) + 
+  xlim(0,1500)
+
+```
+
+
+
+
+
+
+## Conclusion
+
+
+
+
+
+
+
+
+
+## Country Comparison
+
+### Easy to Traverse-- Wide Countries
+
+```{r}
+
+WideCountries <-
+  COVIDFinal %>%
+  subset(select = c("country", "date", "cases")) %>%
+  spread(key = date, value = cases)
+
+WideCountries[is.na(WideCountries)] <- 0
+
+WideCountries
+
+```
 
 
 ```{r}
 
-na.omit(FirstInstance) %>%
-  ggplot(aes(x = beginningofspread, fill = continent)) +
-  geom_dotplot(stackgroups = TRUE, binwidth = 1, binpositions="all") +
-  xlab("Country's First Case of COVID-19") +
-  theme(panel.background = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        axis.title.y = element_blank())
+compareCOVID <- function(countryA, countryB) {
+  
+    A <-
+    WideCountries %>%
+    filter(country == countryA)
+  
+  B <-
+    WideCountries %>%
+    filter(country == countryB)
+
+  A <-
+    A %>%
+    gather(key = date, value = count) %>%
+    filter(row_number() > 1) %>%
+    mutate(date = lubridate::ymd(date)) %>%
+    mutate(count = as.numeric(count)) %>%
+    mutate(country = countryA)
+  
+  B <-
+    B %>%
+    gather(key = date, value = count) %>%
+    filter(row_number() > 1) %>%
+    mutate(date = lubridate::ymd(date))%>%
+    mutate(count = as.numeric(count)) %>%
+    mutate(country = countryB)
+  
+  
+  GG <-
+    rbind(A,B)
+  
+  return( ggplot(GG, aes(x = date, y = count, color = country)) +
+    stat_smooth(formula = y ~ x, method = "loess") +
+      ylab("Number of COVID-19 Cases") +
+      xlab("Date"))
+  
+}
+
+
+
+
 ```
 
 
+### Ex. of compareCOVID() in use:
+
+```{r}
+
+compareCOVID("China", "United States")
+
+compareCOVID("Japan", "Russia")
+
+compareCOVID("Puerto Rico", "Belgium")
+
+```
 
 
 
