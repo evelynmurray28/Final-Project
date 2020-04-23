@@ -432,13 +432,17 @@ na.omit(COVIDFinal) %>%
 
 
 
+evelyn pls write a conclusion here... something about there being a correlation btwn population and spread, but once standardized, the correlation is far less evident... we can not prove a correlation between population density and infection rate/million.
+
+
+also i defined this function (because we need a user defined function and to use wide/narrow form), but unsure exactly where to put it,, lmk if u think of a good place.
 
 
 
 
 
+## Country Comparison Function
 
-## Country Comparison
 
 ### Easy to Traverse-- Wide Countries
 
@@ -455,6 +459,7 @@ WideCountries
 
 ```
 
+### compareCOVID() definition
 
 ```{r}
 
