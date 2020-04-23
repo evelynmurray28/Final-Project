@@ -144,7 +144,8 @@ We will select the aspects of CountryData relevant to our analysis. These attrib
 
 RelevantCountryData <-
   CountryData %>%
-  subset(select = c(1,2,3))
+  subset(select = c(1,2,3)) %>%
+  mutate(popdensity = pop/area)
 
 RelevantCountryData
 ```
@@ -193,7 +194,8 @@ DailySpread <-
   filter(date == "2020-04-05") %>%
   mutate(dayselapsed = date - beginningofspread) %>%
   mutate(dailyspread = cases / as.numeric(dayselapsed) ) %>%
-  subset(select = c("country", "beginningofspread", "dailyspread"))
+  mutate(dailyspreadpermillion = casesPerMillion / as.numeric(dayselapsed) ) %>%
+  subset(select = c("country", "beginningofspread", "dailyspread", "dailyspreadpermillion"))
 
 DailySpread$dailyspread[is.na(DailySpread$dailyspread)] <- 0
 
@@ -207,6 +209,7 @@ DailySpread
 COVIDFinal <-
   left_join(COVIDGrowth, DailySpread, by = c("country"))
 
+
 ```
 
 
@@ -216,6 +219,31 @@ COVIDFinal
 
 ```
 
+### Readible Version-- Wide Countries
+
+```{r}
+
+WideCountries <-
+  COVIDFinal %>%
+  subset(select = c("country", "date", "cases")) %>%
+  spread(key = date, value = cases)
+
+WideCountries[is.na(WideCountries)] <- 0
+
+WideCountries
+
+```
+
+
+
+
+
+
+
+
+
+
+## Data Visualization
 
 
 
@@ -225,7 +253,9 @@ COVIDFinal %>%
   group_by(date) %>%
   summarise(totalcases = sum(cases)) %>%
   ggplot(aes(x = date, y = totalcases)) + 
-  geom_point()
+  geom_point() +
+  xlab("Date") +
+  ylab("COVID-19 Cases")
 
 ```
 ```{r}
@@ -235,8 +265,9 @@ na.omit(COVIDFinal) %>%
   summarise(totalcases = sum(cases)) %>%
   ggplot(aes(x = date, y = totalcases)) + 
   geom_point() +
-  facet_wrap(~continent)
-
+  facet_wrap(~continent) +
+  xlab("Date") +
+  ylab("COVID-19 Cases")
 ```
 
 
@@ -252,8 +283,8 @@ COVIDFinal %>%
   geom_bar(stat="identity", position = 'stack', width=.9) +
   theme(axis.text.x=element_text(angle = 60, hjust = 1)) +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
-  xlab("Country") +
-  ylab("Spread of COVID-19 cases Per Day")
+  ylab("Average Number Infected Per Day") +
+  theme(axis.title.x = element_blank())
 
 
 
@@ -268,7 +299,11 @@ COVIDFinal %>%
 
 na.omit(COVIDFinal) %>%
   ggplot(aes(x = pop, y = dailyspread, color = continent)) + 
-  geom_point()
+  geom_point() +
+  xlab("Population of Country") +
+  ylab("Average Number Infected Per Day") +
+  stat_smooth(method = lm) 
+
 
 
 ```
@@ -282,8 +317,12 @@ WITHOUT OUTLIERS SHOWS STILL STRONG POSITIVE CORRELATION
 na.omit(COVIDFinal) %>%
   ggplot(aes(x = pop, y = dailyspread, color = continent)) + 
   geom_point() +
-  xlim(0,500000000)
-  ylim(0, 40000)
+  xlim(0,500000000) +
+  ylim(0, 40000) +
+  xlab("Population of Country") +
+  ylab("Average Number Infected Per Day") +
+  stat_smooth(method = lm) 
+
 
 
 ```
