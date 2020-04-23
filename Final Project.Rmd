@@ -15,8 +15,7 @@ library(broom)
 
 ## Research Focus:
 
-As COVID-19 spreads at an alarming rate, a pressing question at a global scale emerges-- what factors of a country contribute to the spread of Coronavirus. We hope to analyze the relationship between population and average spread of COVID-19 across the six inhabeted continents.
-
+As COVID-19 spreads at an alarming rate, a pressing question at a global scale emerges-- what factors of a country contribute to the spread of Coronavirus. We hope to analyze the relationship between a country's population level, population density, and continent categorization on the spread of COVID-19.
 
 
 
@@ -152,7 +151,7 @@ RelevantCountryData
 
 ### Joining Data & Relevant Variable Synthesis
 
-Calculate the number of cases in each country by multiplying casesPerMillion by population (in millions). This variable is now a standardized metric with which we can compare countries.
+Calculate the number of cases in each country by multiplying casesPerMillion by the country's population (in millions). 
 ```{r}
 
 COVIDGrowth <-
@@ -168,7 +167,7 @@ COVIDGrowth
 
 ### Creation of new Data Table: FirstInstance
 
-This table records the first date that a country recorded a nonzero number of COVID-19 cases. This datagraph will help us visualize /bwhen/ countries first became infected.
+This table records the first date that a country recorded a nonzero number of COVID-19 cases. This datagraph will help us visualize when countries first became infected.
 ```{r}
 
 FirstInstance <-
