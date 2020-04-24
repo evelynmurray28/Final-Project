@@ -242,7 +242,7 @@ COVIDFinal %>%
   ylab("COVID-19 Cases")
 
 ```
-
+This graph shows the exponential growth trend that we already knew existed with COVID-19.  This confirms that our data is valid in that it accurately represents the trends that have been described by researchers and scientists in the media.
 
 
 
@@ -259,7 +259,7 @@ na.omit(COVIDFinal) %>%
   xlab("Date") +
   ylab("COVID-19 Cases")
 ```
-
+This graph shows the growth in cases by continent.  The trend is much stronger in the origin continent of Asia, but also shows strength growing in Europe, Africa, North America, and South America.
 
 ### Infection of COVID-19 into countries over time
 ```{r}
@@ -273,7 +273,7 @@ na.omit(FirstInstance) %>%
         axis.ticks.y = element_blank(),
         axis.title.y = element_blank())
 ```
-
+This graph shows the progression of the COVID-19 spread across continents. Asia was obviously the first country to have cases, but North America and Europe quickyl followed.  South America and Africa both joined in late February, whereas Australia was able to isolate themselves until mid to late March.
 
 
 
@@ -298,7 +298,7 @@ COVIDFinal %>%
 
 
 ```
-
+According to this graph, the countries with the top four infection rates are China, India, Indonesia, and the United States, closely followed by Brazil.  Keep in mind that this is adjusted for the population, so in this graph, population is not a confounding factor.
 ### Compare this to which countries have the highest populations
 
 ```{r}
@@ -317,7 +317,7 @@ COVIDFinal %>%
 
 
 ```
-
+We see a similar trend here, in that the top four (in slightly different order) consist of China, India, Indonesia, the United States, and closely trailing Brazil.
 
 ### Let's visualize the relationship between population and COVID-19 spread on the same data frame... with an awareness of the continental distribution
 
@@ -333,7 +333,7 @@ na.omit(COVIDFinal) %>%
 
 
 ```
-
+Here, we can see again the trend that was represented in the two previous graphs, but now they are all in the same data frame.  While most of the rest of the world trails with under 10,000 infected per day, the 5 countries with the highest popualtion in the data set have over 15,000 - up to over 50,000- and are far separated from the rest of the pack.  Population, while not a direct factor contributing to the level of development of a country, is a decent indicator of the rate of infection.
 
 
 ### Does the relationship hold up after removing the largest outliers (China and India)?
