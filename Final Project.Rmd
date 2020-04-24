@@ -116,9 +116,7 @@ TidyCOVID
 
 ```
 
-
-
-EVELYN pls explain what an instance represents
+Ezch instance in TidyCOVID represents a different day in a country's progression through COVID-19.  It provides the country code, the date, and the total cases per million up to that date.
 
 
 ### Wrangling of countryRegions Dataset
@@ -300,6 +298,7 @@ COVIDFinal %>%
 
 ```
 According to this graph, the countries with the top four infection rates are China, India, Indonesia, and the United States, closely followed by Brazil.
+
 ### Compare this to which countries have the highest populations
 
 ```{r}
@@ -338,6 +337,7 @@ Here, we can see again the trend that was represented in the two previous graphs
 
 
 ### Does the relationship hold up after removing the largest outliers (China and India)?
+
 ### Does the positive relationship hold up across all continents?
 ```{r}
 
@@ -428,22 +428,7 @@ Again, it is hard to see a perfect correlaiton here.  In general, all the graphs
 
 
 
-
-## Conclusion
-
-Ultimately, COVID-19 still remains a mystery to us.  We were able to find a positive correlation between the population of a country and its spread.  This indicates that the more people a country has, the more likely the infection is to affect a large portion of the people. However, we struggled to find the correlation that we were looking for between the population density and the infection rate per million.  This indicated that the correlation is far less evident once standardized and confounding factors are removed.
-
-In the future when more updated information about COVID-19 is released, some of these trends may be more relevant or easy to define.  However, with the little that we know, it was not possible to make this conclusion with confidence.
-
-
-
-also i defined this function (because we need a user defined function and to use wide/narrow form), but unsure exactly where to put it,, lmk if u think of a good place.
-
-
-
-
-
-## Country Comparison Function
+## Extended Comparative Analysis - Country Comparison Function
 
 
 ### Easy to Traverse-- Wide Countries
@@ -510,6 +495,8 @@ compareCOVID <- function(countryA, countryB) {
 
 ### Ex. of compareCOVID() in use:
 
+This function willl allow us to create a direct comparison between two countries based on the date and the number of COVID-19 cases in each country.  This way, we can compare the spread between nations and identify similar trends in different parts of the world.
+
 ```{r}
 
 compareCOVID("China", "United States")
@@ -519,6 +506,14 @@ compareCOVID("Japan", "Russia")
 compareCOVID("Puerto Rico", "Belgium")
 
 ```
+
+
+## Conclusion
+
+Ultimately, COVID-19 still remains a mystery to us.  We were able to find a positive correlation between the population of a country and its spread.  This indicates that the more people a country has, the more likely the infection is to affect a large portion of the people. However, we struggled to find the correlation that we were looking for between the population density and the infection rate per million.  This indicated that the correlation is far less evident once standardized and confounding factors are removed.
+
+In the future when more updated information about COVID-19 is released, some of these trends may be more relevant or easy to define.  However, with the little that we know, it was not possible to make this conclusion with confidence.
+
 
 
 
