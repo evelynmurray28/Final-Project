@@ -11,6 +11,7 @@ library(lubridate)
 library(DataComputing)
 library(rvest)
 library(broom)
+library(rworldmap)
 ```
 
 ## Research Focus:
@@ -378,6 +379,7 @@ COVIDFinal %>%
 
 
 ```
+According the this graph, those with the highest infection rates with the confounding factor of population removed (since it is population per million, it has been adjusted to put all countries on one scale) are Guinea-Bissau, Botswana, Eritrea, El Salvador, and Puerto Rico.
 
 ### Which countries have the highest population density?
 
@@ -398,7 +400,7 @@ COVIDFinal %>%
 
 
 ```
-
+According the this graph, those with the highest population density (number of people per square kilometer) are Monaco, Singapore, and Gibraltar.
 
 
 
@@ -410,7 +412,7 @@ na.omit(COVIDFinal) %>%
   ggplot(aes(x = popdensity, y = dailyspreadpermillion)) +
   geom_point() 
 ```
-
+On this graph, it is a little chalenging to see the relationship between population density and the daily spread per million.  For the sake of this analysis, we will further divide the information.
 
 ### What if faceted by continent?
 
@@ -422,17 +424,17 @@ na.omit(COVIDFinal) %>%
   xlim(0,1500)
 
 ```
-
-
+Again, it is hard to see a perfect correlaiton here.  In general, all the graphs show little t no correlation between the population density and the daily spread per million.
 
 
 
 
 ## Conclusion
 
+Ultimately, COVID-19 still remains a mystery to us.  We were able to find a positive correlation between the population of a country and its spread.  This indicates that the more people a country has, the more likely the infection is to affect a large portion of the people. However, we struggled to find the correlation that we were looking for between the population density and the infection rate per million.  This indicated that the correlation is far less evident once standardized and confounding factors are removed.
 
+In the future when more updated information about COVID-19 is released, some of these trends may be more relevant or easy to define.  However, with the little that we know, it was not possible to make this conclusion with confidence.
 
-evelyn pls write a conclusion here... something about there being a correlation btwn population and spread, but once standardized, the correlation is far less evident... we can not prove a correlation between population density and infection rate/million.
 
 
 also i defined this function (because we need a user defined function and to use wide/narrow form), but unsure exactly where to put it,, lmk if u think of a good place.
