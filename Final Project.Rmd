@@ -298,7 +298,7 @@ COVIDFinal %>%
 
 
 ```
-According to this graph, the countries with the top four infection rates are China, India, Indonesia, and the United States, closely followed by Brazil.  Keep in mind that this is adjusted for the population, so in this graph, population is not a confounding factor.
+According to this graph, the countries with the top four infection rates are China, India, Indonesia, and the United States, closely followed by Brazil.
 ### Compare this to which countries have the highest populations
 
 ```{r}
@@ -352,7 +352,7 @@ na.omit(COVIDFinal) %>%
 
 
 ```
-
+Removing the largest outliers of China and India, the poitive relationship still holds.  Regardless of whether they are involved, the trends are very clearly upward sloping.
 
 
 ### A prevailing explanation for the spread of COVID-19 is social closeness, therefore, we hypothesize that countries with the highest population density will have the highest proportional rates of infection. To measure the proportional rates of infection, it is essential to use a standardized metric, such that the data is not skewed towards the countries with simply the most people. Therefore, we will analyze the variable "population per million infected per day", which captures a representation of the percentage of a country's population that is effective. If our hypothesis is correct, the countries with the highest population per million infected per day will be those with the highest population density.
