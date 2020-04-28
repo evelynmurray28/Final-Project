@@ -1,6 +1,6 @@
 ---
 title: 'Final Project: Guidance Document'
-author: "Evelyn Murray and Joey Pevner"
+author: "Evelyn Murray and Joseph Pevner"
 date: "Due April 24, 2020"
 output:  html_notebook
 ---
@@ -23,7 +23,10 @@ Line 50
 Line 69
 
 (B) .Rmd Line numbers for inspecting data intake:  
-JOEY?
+Lines 34-45
+Lines 55-66
+Lines 75-86
+
 
 ### Data Wrangling (5 out of 8 required)
 
@@ -31,28 +34,34 @@ JOEY?
 
 
 (A) .Rmd Line number(s) for general data wrangling: 
-
+Lines 101-115
+Lines 130-138
+Lines 145-153
+Lines 179-190
+Lines 198-213
 
 (B) .Rmd Line number(s) for a join operation: 
-
+Lines 159-174
+Line 201
+Lines 222-228
 
 (C) .Rmd Line number(s) for a spread or gather operation (or equivalent):
-
-
-(D) .Rmd Line number(s) for use of regular expressions: 
+Line 454
+Line 478
+Line 486
 
 
 (E) .Rmd Line number(s) for use of reduction and/or transformation functions: 
-
+Line 252
+Line 268
+Line 301
+Line 322
+Line 383
+Line 404
 
 (F) .Rmd Line number(s) for use of user-defined functions: 
-Line 500
-
-(G) .Rmd Line number(s) for use of loops and/or control flow: 
-
-
-(H) .Rmd Line number(s) for use of machine learning (not "wrangling" but scored here): 
-
+Lines 464-506
+Lines 513-521
 
 
 ### Data Visualization (3 of 5 required)
@@ -61,16 +70,20 @@ Line 500
 
 
 (A) .Rmd Line number(s) for use of mulitple different geoms:  
+Line 254
+Line 282
+Line 305
+Line 365
 
 (B) .Rmd Line number(s) for use of multiple aesthetics:  
+Line 253
+Line 271
+Line 281
+Line 342
+Line 496
 
 (C) .Rmd Line number(s) for use of layered graphics:  
-
-(D) .Rmd Line number(s) for use of leaflet maps:  
-
-(E) .Rmd Line number(s) for use of decision tree or dendogram results:    
-
-
+Lines 356-369
 
 
 ### Other requirements (Nothing for you to report in this Guidance Document)

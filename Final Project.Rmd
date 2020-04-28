@@ -301,9 +301,9 @@ COVIDFinal %>%
   summarise(dailyspread = mean(dailyspread)) %>%
   arrange(desc(dailyspread)) %>%
   head(20) %>%
-  ggplot(aes(x = reorder(country, desc(dailyspread)), y= dailyspread)) +
-  geom_bar(stat="identity", position = 'stack', width=.9) +
-  theme(axis.text.x=element_text(angle = 60, hjust = 1)) +
+  ggplot(aes(x = reorder(country, desc(dailyspread)), y = dailyspread)) +
+  geom_bar(stat = "identity", position = 'stack', width = .9) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1)) +
   scale_y_continuous(labels = function(x) format(x, scientific = FALSE)) +
   ylab("Average Number Infected Per Day") +
   theme(axis.title.x = element_blank())
