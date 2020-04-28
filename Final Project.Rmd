@@ -44,6 +44,7 @@ COVID %>%
   head()
 ```
 
+The original COVID data set is clearly in need of some data wrangling-- it has an abundance of empty columns along with improper column headings.
 
 
 #### Data Source 2: CountryData
@@ -64,6 +65,8 @@ CountryData %>%
   head()
 ```
 
+CountryData is tidy, but in its current form, it contains many variables nonrelevant to our analysis-- we will extract the relevant factors (country, area, pop).
+
 #### Data Source 3: countryRegions
 
 ```{r}
@@ -82,7 +85,7 @@ countryRegions %>%
   head()
 ```
 
-
+The countryRegions data set is tidy, but it contains many variables nonrelevant to our analysis-- we will extract the relevant factors (ISO3, REGION).
 
 
 ## Data Wrangling
@@ -93,30 +96,31 @@ countryRegions %>%
 COVID
 ```
 
-Since our analysis is focused on the spread of COVID-19, we select only columns which pertain to the number of COVID-19 cases in countries over time.
+Since our analysis is focused on the spread of COVID-19, we select only columns which pertain to the number of COVID-19 cases in countries over time. We rename to columns to descriptive titles, and we convert values to usable form. 
 
 ```{r}
 TidyCOVID <- COVID %>%
   rename(country = total.covid.cases.deaths.per.million ) %>%
-  rename( Code = X ) %>%
+  rename( code = X ) %>%
   rename(date = X.1 ) %>%
   rename(casesPerMillion = X.3) %>%
   filter(row_number() > 1) %>%
   subset(select = c(1,2,3,5)) %>%
-  mutate( country = as.character(country) ) %>%
+  mutate( country = as.character(country) ) %>%  
+  mutate( code = as.character(code) ) %>%
   mutate(date = mdy(date)) %>%
   mutate(casesPerMillion = as.integer(casesPerMillion) - 1)
 
 
 ```
 
-
+The Tidy COVID dataset for our analysis.
 ```{r}
 TidyCOVID
 
 ```
 
-Ezch instance in TidyCOVID represents a different day in a country's progression through COVID-19.  It provides the country code, the date, and the total cases per million up to that date.
+Each instance in TidyCOVID represents a different day in a country's progression through COVID-19.  It provides the country code (which will be later utilized to assign continent categorization), the date, and the total cases per million up at that date.
 
 
 ### Wrangling of countryRegions Dataset
@@ -136,7 +140,7 @@ Labels
 
 ### Data Extraction of CountryData Dataset
 
-We will select the aspects of CountryData relevant to our analysis. These attributes are: area (sq km) and pop (number of people).
+We will select the aspects of CountryData relevant to our analysis. These attributes are: area (sq km) and pop (number of people). From these attributes we calculate the country's popdensity (person/sq km).
 
 ```{r}
 
@@ -150,7 +154,8 @@ RelevantCountryData
 
 ### Joining Data & Relevant Variable Synthesis
 
-Calculate the number of cases in each country by multiplying casesPerMillion by the country's population (in millions). 
+At this point, we join the tidied COVID data set with the extracted CountryData set such that each case represents a different day in a country's progression through COVID-19, providing the specific country, date, total cases per million up at that date, the area of the country (sq km), the population of the country, the population density of the countrym the total number of cases (derived by multiplying a country's casesPerMillion by the population (in millions)), and the continent categorization.
+
 ```{r}
 
 COVIDGrowth <-
@@ -159,14 +164,18 @@ COVIDGrowth <-
 
 COVIDGrowth <-
   COVIDGrowth %>%
-  left_join(Labels, by = c("Code" = "ISO3"))
+  left_join(Labels, by = c("code" = "ISO3"))
+
+COVIDGrowth <-
+  COVIDGrowth %>%
+  subset(select = c(1, 3, 4, 5, 6, 7, 8, 9))
 
 COVIDGrowth
 ```
 
 ### Creation of new Data Table: FirstInstance
 
-This table records the first date that a country recorded a nonzero number of COVID-19 cases. This datagraph will help us visualize when countries first became infected.
+This new data table records the first date that a country recorded a nonzero number of COVID-19 cases. This datagraph will help us visualize when countries first became infected.
 ```{r}
 
 FirstInstance <-
@@ -182,8 +191,9 @@ FirstInstance
 
 
 
+### Creation of new Data Table: DailySpread
 
-This table averages the number of case increase per day from the first day a country had COVID-19 to the most recent in the data table (April 5 2020)
+The DailySpread data frame utilizes the COVIDGrowth data along with the beginningofspread variable (which was derived in the FirstInstance table) in order to calculate a straight-line approximation of the daily spread of COVID-19, averaging cases over time from the first day a country was infected to the most recent date in the data table (April 5 2020). If a country has not been infected, the dailyspread is set to 0.
 
 ```{r}
 
@@ -202,6 +212,11 @@ DailySpread$dailyspreadpermillion[is.na(DailySpread$dailyspreadpermillion)] <- 0
 DailySpread
 ```
 
+
+### Comprehensive Data Table: COVIDFinal
+
+
+Joining the growth-calculated COVID data set with the DailySpread statistics allows us our comprehensive data frame with which we will conduct our analysis. Within this frame, each case represents a different day in a country's progression through COVID-19, providing the specific country, date, total cases per million up at that date, the area of the country (sq km), the population of the country, the population density of the countrym the total number of cases (derived by multiplying a country's casesPerMillion by the population (in millions)), continent categorization, date which the spread of COVID-19 began, the average daily spread of COVID-19, and the average daily spread of COVID-19 per million of population.
 
 
 ```{r}
@@ -241,8 +256,7 @@ COVIDFinal %>%
   ylab("COVID-19 Cases")
 
 ```
-This graph shows the exponential growth trend that we already knew existed with COVID-19.  This confirms that our data is valid in that it accurately represents the trends that have been described by researchers and scientists in the media.
-
+This graph demonstrates the exponential growth trend of COVID-19 globally. There is a strong positive correlation between the progression of time and then number of COVID-19 cases worldwide.
 
 
 ### Continental Growth of COVID-19 Over Time
@@ -258,7 +272,7 @@ na.omit(COVIDFinal) %>%
   xlab("Date") +
   ylab("COVID-19 Cases")
 ```
-This graph shows the growth in cases by continent.  The trend is much stronger in the origin continent of Asia, but also shows strength growing in Europe, Africa, North America, and South America.
+This graph shows the growth of COVID-19 cases over time, faceted by continent. The global exponential trend is most visible in the origin continent of Asia, but the positive correlation of COVID-19 over time is visible in each continents.
 
 ### Infection of COVID-19 into countries over time
 ```{r}
@@ -272,7 +286,7 @@ na.omit(FirstInstance) %>%
         axis.ticks.y = element_blank(),
         axis.title.y = element_blank())
 ```
-This graph shows the progression of the COVID-19 spread across continents. Asia was obviously the first country to have cases, but North America and Europe quickyl followed.  South America and Africa both joined in late February, whereas Australia was able to isolate themselves until mid to late March.
+This graph shows the progression of the COVID-19 spread across continents. As supported and congruent with the faceted graph of continental growth over time, Asia was the first continent to be infected, followed by North America and Europe. In late February, South America and Africa began to become infected, and Australia was able to isolate until mid March. Where continental datapoints show density alligns with, in the graphic above, where the continents experience greatest periods of growth.
 
 
 
@@ -297,7 +311,7 @@ COVIDFinal %>%
 
 
 ```
-According to this graph, the countries with the top four infection rates are China, India, Indonesia, and the United States, closely followed by Brazil.
+This graphic demonstrates the countries with the highest infection rates-- those most significant of which are China, India, Indonesia, and the United States, closely followed by Brazil, after which the rate of infection tapers off to a comparatively similar rate.
 
 ### Compare this to which countries have the highest populations
 
@@ -317,7 +331,7 @@ COVIDFinal %>%
 
 
 ```
-We see a similar trend here, in that the top four (in slightly different order) consist of China, India, Indonesia, the United States, and closely trailing Brazil.
+We see a similar trend here, in that the countries of top population (in slightly different order) consist of China, India, Indonesia, the United States, and closely trailing Brazil, after which population seems to taper off to relatively similar levels.
 
 ### Let's visualize the relationship between population and COVID-19 spread on the same data frame... with an awareness of the continental distribution
 
@@ -333,7 +347,7 @@ na.omit(COVIDFinal) %>%
 
 
 ```
-Here, we can see again the trend that was represented in the two previous graphs, but now they are all in the same data frame.  While most of the rest of the world trails with under 10,000 infected per day, the 5 countries with the highest popualtion in the data set have over 15,000 - up to over 50,000- and are far separated from the rest of the pack.  Population, while not a direct factor contributing to the level of development of a country, is a decent indicator of the rate of infection.
+This dataframe clearly demonstrates the strong positive correlation between a country's population and average number infected per day, as supported by our analysis of the previous two graphics. While most countries of the world trail with under 10,000 infected per day, the 5 countries with the highest popualtion in the data set have over 15,000 - up to over 50,000- and are far separated from the rest of the pack.  Population, while not a direct factor contributing to the level of development of a country, is a decent indicator of the rate of infection.
 
 
 ### Does the relationship hold up after removing the largest outliers (China and India)?
@@ -353,7 +367,7 @@ na.omit(COVIDFinal) %>%
 
 
 ```
-Removing the largest outliers of China and India, the poitive relationship still holds.  Regardless of whether they are involved, the trends are very clearly upward sloping.
+Removing the largest outliers of population and number infected, the poitive relationship between average number infected and population still holds; for each continent, the trends are very clearly upward sloping.
 
 
 ### A prevailing explanation for the spread of COVID-19 is social closeness, therefore, we hypothesize that countries with the highest population density will have the highest proportional rates of infection. To measure the proportional rates of infection, it is essential to use a standardized metric, such that the data is not skewed towards the countries with simply the most people. Therefore, we will analyze the variable "population per million infected per day", which captures a representation of the percentage of a country's population that is effective. If our hypothesis is correct, the countries with the highest population per million infected per day will be those with the highest population density.
@@ -412,7 +426,7 @@ na.omit(COVIDFinal) %>%
   ggplot(aes(x = popdensity, y = dailyspreadpermillion)) +
   geom_point() 
 ```
-On this graph, it is a little chalenging to see the relationship between population density and the daily spread per million.  For the sake of this analysis, we will further divide the information.
+On this graph, it is chalenging to see a clear relationship between population density and daily spread of COVID-19 per million.  For the sake of comprehensive analysis, we will further divide the information.
 
 ### What if faceted by continent?
 
@@ -424,8 +438,7 @@ na.omit(COVIDFinal) %>%
   xlim(0,1500)
 
 ```
-Again, it is hard to see a perfect correlaiton here.  In general, all the graphs show little t no correlation between the population density and the daily spread per million.
-
+Again, it is hard to see a perfect correlaiton here.  In general, all the graphs show little to no correlation between the population density and the daily spread per million.
 
 
 ## Extended Comparative Analysis - Country Comparison Function
@@ -495,7 +508,7 @@ compareCOVID <- function(countryA, countryB) {
 
 ### Ex. of compareCOVID() in use:
 
-This function willl allow us to create a direct comparison between two countries based on the date and the number of COVID-19 cases in each country.  This way, we can compare the spread between nations and identify similar trends in different parts of the world.
+This function allow us to create a direct comparison between two countries based on the date and the number of COVID-19 cases in each country.  This way, we can compare the spread between nations and identify similar trends in different parts of the world.
 
 ```{r}
 
@@ -510,9 +523,7 @@ compareCOVID("Puerto Rico", "Belgium")
 
 ## Conclusion
 
-Ultimately, COVID-19 still remains a mystery to us.  We were able to find a positive correlation between the population of a country and its spread.  This indicates that the more people a country has, the more likely the infection is to affect a large portion of the people. However, we struggled to find the correlation that we were looking for between the population density and the infection rate per million.  This indicated that the correlation is far less evident once standardized and confounding factors are removed.
-
-In the future when more updated information about COVID-19 is released, some of these trends may be more relevant or easy to define.  However, with the little that we know, it was not possible to make this conclusion with confidence.
+Ultimately, the contributing factors of the spread of COVID-19 still remains a mystery to us.  We were able to find a strong positive correlation between the population of a country and the spread.  This indicates that the more people a country has, the more likely the infection is to affect a large number of people. However, we struggled to find a strong correlation, once standardized and confounding factors were removed, between the population density of a country and its infection rate per million. This does not necessarily prove that density of living does not contribute to the spread of COVID-19-- one fault present within this analysis is that population density was calculated from a country's entire land area, whereas only a small portion of this land area may be inhabited. If we were to conduct this analysis again, we would seek out data which provides the inhabited living area of a country to more accurately calculate population density. Furthermore, as demonstrated by the graphics, many countries have been infected very recently, or not infected at all. The growth of country demonstrates in this short period of time may not be indicative of the overall growth trend that a country experiences. In the future, once we are more updated and more information about COVID-19 is released, some of the trends which we are seeking may be more relevant or easy to define.  However, with the data we currently possess, it was not possible to make the conclusion-- that population density is correlated with standardized COVID-19 spread-- with confidence.
 
 
 
